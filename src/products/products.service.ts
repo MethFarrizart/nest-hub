@@ -20,7 +20,7 @@ export class ProductService {
   }
   async findAll(): Promise<Product> {
     // return await this.productRepo.find();
-    return await this.dataSource.query<Product>('SELECT * FROM product');
+    return await this.dataSource.query<Product>('SELECT * FROM products');
   }
 
   async findOne(id: number): Promise<Product> {

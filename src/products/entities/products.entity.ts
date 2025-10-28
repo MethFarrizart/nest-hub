@@ -9,5 +9,8 @@ export class Product {
   name: string;
 
   @Column('int')
-  age: number;
+  price: number;
+
+  @Column('int')
+  qty: number;
 }
