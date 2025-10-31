@@ -6,12 +6,15 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { AuthGuard } from 'src/common/guard/auth.guard';
 
 @Controller('products')
+@UseGuards(new AuthGuard())
 export class ProductsController {
   constructor(private readonly productService: ProductService) {}
   @Post('store')
