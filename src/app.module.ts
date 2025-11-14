@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { LoggerMiddleWare } from './common/middleware/logger.middleware';
+import { AuthMiddleWare } from './common/middleware/auth.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -44,6 +44,6 @@ import { APP_GUARD } from '@nestjs/core';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleWare).forRoutes('*');
+    consumer.apply(AuthMiddleWare).forRoutes('*');
   }
 }
