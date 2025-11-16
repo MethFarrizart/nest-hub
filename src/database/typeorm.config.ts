@@ -1,21 +1,18 @@
-import { DataSource } from 'typeorm';
-// import { Product } from '../products/entities/products.entity';
-// import { Cat } from '../cats/entities/cat.entity';
-// import { Category } from '../category/entities/category.entity';
-// import { Brand } from '../brand/entities/brand.entity';
-// import { User } from '../user/entities/user.entity';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-export const AppDataSource = new DataSource({
-  type: 'postgres', // or mysql
+export const AppDataSource: DataSourceOptions = {
+  type: 'mysql',
   host: 'localhost',
-  port: 8081,
-  username: 'postgres',
-  password: '12345678',
+  port: 3306,
+  username: 'root',
+  password: '',
   database: 'ecogrow',
-  // entities: [Product, Cat, Category, Brand, User],
-  entities: ['dist/**/*.entity.ts'],
-  migrations: ['dist/migrations/*.ts'],
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/src/database/migrations/**/*{.ts,.js}'],
+  // migrationsTableName: 'typeorm_migrations',
   synchronize: false,
-  logging: true,
-});
-// export default AppDataSource;
+  // logging: true,
+};
+
+const dataSource = new DataSource(AppDataSource);
+export default dataSource;

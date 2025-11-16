@@ -9,24 +9,16 @@ import { ProductsModule } from './products/products.module';
 import { CategoryModule } from './category/category.module';
 import { BrandModule } from './brand/brand.module';
 import { UserModule } from './user/user.module';
-import { APP_GUARD } from '@nestjs/core';
+import { AppDataSource } from './database/typeorm.config';
+// import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // makes process.env available everywhere
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 8081,
-      username: 'postgres',
-      password: '12345678',
-      database: 'ecogrow',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/migrations/*{.ts,.js}'],
-      synchronize: true,
-    }),
+
+    TypeOrmModule.forRoot(AppDataSource),
     CatsModule,
     ProductsModule,
     CategoryModule,
@@ -44,6 +36,9 @@ import { APP_GUARD } from '@nestjs/core';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleWare).forRoutes('*');
+    consumer
+      .apply(AuthMiddleWare)
+      .exclude('user/register', 'user/login')
+      .forRoutes('*');
   }
 }
