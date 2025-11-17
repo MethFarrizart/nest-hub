@@ -100,3 +100,13 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 # generate jwt secret key run on bash
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+
+# create and run migration need to run three commands
+<!-- read dist -->
+pnpm run build 
+
+<!-- create migration -->
+pnpm migration:new
+
+<!-- migrate in to database -->
+pnpm migration:run

@@ -2,14 +2,14 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AuthMiddleWare } from './common/middleware/auth.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
 import { CategoryModule } from './category/category.module';
 import { BrandModule } from './brand/brand.module';
 import { UserModule } from './user/user.module';
-import { AppDataSource } from './database/typeorm.config';
+// import { AppDataSource } from './database/typeorm.config';
 // import { APP_GUARD } from '@nestjs/core';
 
 @Module({
@@ -18,7 +18,23 @@ import { AppDataSource } from './database/typeorm.config';
       isGlobal: true, // makes process.env available everywhere
     }),
 
-    TypeOrmModule.forRoot(AppDataSource),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'mysql',
+        host: config.get<string>('DB_HOST'),
+        port: config.get<number>('DB_PORT'),
+        username: config.get<string>('DB_USERNAME'),
+        password: config.get<string>('DB_PASSWORD'),
+        database: config.get<string>('DB_NAME'),
+        // entities: [__dirname + '/**/*.entity.ts'],
+        // migrations: ['dist/database/migrations/*.ts'],
+        entities: [__dirname + '/**/*.entity.{js,ts}'],
+        migrations: [__dirname + '/../database/migrations/*.{js,ts}'],
+        synchronize: false,
+      }),
+    }),
     CatsModule,
     ProductsModule,
     CategoryModule,
