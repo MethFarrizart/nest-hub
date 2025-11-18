@@ -9,4 +9,7 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column()
+  role_id: number;
 }

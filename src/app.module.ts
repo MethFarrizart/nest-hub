@@ -9,8 +9,10 @@ import { ProductsModule } from './products/products.module';
 import { CategoryModule } from './category/category.module';
 import { BrandModule } from './brand/brand.module';
 import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
 // import { AppDataSource } from './database/typeorm.config';
 // import { APP_GUARD } from '@nestjs/core';
+import { TestModule } from './test/test.module';
 
 @Module({
   imports: [
@@ -28,10 +30,9 @@ import { UserModule } from './user/user.module';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        // entities: [__dirname + '/**/*.entity.ts'],
-        // migrations: ['dist/database/migrations/*.ts'],
-        entities: [__dirname + '/**/*.entity.{js,ts}'],
-        migrations: [__dirname + '/../database/migrations/*.{js,ts}'],
+        // entities: ['dist/**/*.entity.ts'],
+        entities: [User],
+        migrations: ['dist/database/migrations/*.ts'],
         synchronize: false,
       }),
     }),
@@ -40,6 +41,7 @@ import { UserModule } from './user/user.module';
     CategoryModule,
     BrandModule,
     UserModule,
+    TestModule,
   ],
   controllers: [AppController],
   providers: [

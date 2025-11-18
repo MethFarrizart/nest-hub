@@ -1,5 +1,9 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
+import { User } from 'src/user/entities/user.entity';
+import { Product } from 'src/products/entities/products.entity';
+import { Brand } from 'src/brand/entities/brand.entity';
+import { Category } from 'src/category/entities/category.entity';
 
 dotenv.config();
 
@@ -10,7 +14,7 @@ export const AppDataSource: DataSourceOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'], // TS files
+  entities: [User, Product, Brand, Category], // TS files
   migrations: ['src/database/migrations/*.ts'],
   // migrationsTableName: 'typeorm_migrations',
   synchronize: false,

@@ -106,7 +106,29 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 pnpm run build 
 
 <!-- create migration -->
-pnpm migration:new
+pnpm migration:new src/database/migrations/CreateCategoryTable
 
 <!-- migrate in to database -->
 pnpm migration:run
+
+# Create CRUD generator (full folder structure)
+nest g resource [name]
+
+# Create controller
+nest g controller [name]
+
+
+
+
+
+
+
+<!-- Note: migration: Create once, run once life cycle -->
+
+
+
+
+<!-- "migration:new": "pnpm typeorm migration:generate -d src/database/typeorm.config.ts", -->
+
+<!--     "migration:new": "pnpm typeorm migration:generate ./src/database/migrations/news -d ./src/database/typeorm.config.ts",
+ -->
