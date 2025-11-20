@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-
 @Injectable()
 export class UserService {
   constructor(
@@ -71,4 +70,6 @@ export class UserService {
 
     return { user: savedUser, token };
   }
+
+  async logout(body: any) {}
 }

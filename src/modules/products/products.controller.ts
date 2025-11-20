@@ -7,14 +7,16 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from 'src/common/guard/auth.guard';
+import { findProduct } from './dto/findProduct.dto';
 
 @Controller('products')
-@UseGuards(new AuthGuard())
+@UseGuards(AuthGuard)
 export class ProductsController {
   constructor(private readonly productService: ProductService) {}
   @Post('store')
@@ -42,8 +44,8 @@ export class ProductsController {
     return this.productService.remove(+id);
   }
 
-  @Post('get_expire_product')
-  expireProduct() {
-    return this.productService.expireProduct();
+  @Post('find_product')
+  findProduct(@Body() body: findProduct) {
+    return this.productService.findProduct(body);
   }
 }

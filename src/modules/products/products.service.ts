@@ -5,6 +5,7 @@ import { Product } from './entities/products.entity';
 import { Repository } from 'typeorm';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DataSource } from 'typeorm';
+import { findProduct } from './dto/findProduct.dto';
 
 @Injectable()
 export class ProductService {
@@ -29,6 +30,12 @@ export class ProductService {
     return product;
   }
 
+  async findProduct(body: findProduct): Promise<Product> {
+    const product = await this.productRepo.findOneBy({ id: body.id });
+    if (!product) throw new NotFoundException('Product not found');
+    return product;
+  }
+
   async update(id: number, dto: UpdateProductDto): Promise<Product> {
     await this.productRepo.update(id, dto);
     return this.findOne(id);
@@ -37,9 +44,5 @@ export class ProductService {
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
     await this.productRepo.remove(product);
-  }
-
-  async expireProduct(): Promise<string> {
-    return '';
   }
 }
