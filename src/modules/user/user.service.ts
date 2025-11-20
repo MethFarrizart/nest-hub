@@ -42,7 +42,7 @@ export class UserService {
   async register(
     dto: CreateUserDto,
   ): Promise<{ user: User; token: string } | null> {
-    const { username, password } = dto;
+    const { username, password, role_id } = dto;
 
     const salt = await bcrypt.genSalt(10);
     const hashPW = await bcrypt.hash(password, salt);
@@ -56,6 +56,7 @@ export class UserService {
     const userData = this.userRepo.create({
       username,
       password: hashPW,
+      role_id,
     });
 
     const savedUser = await this.userRepo.save(userData);

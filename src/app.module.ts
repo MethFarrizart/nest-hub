@@ -3,11 +3,6 @@ import { AuthMiddleWare } from './common/middleware/auth.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CatsModule } from './modules/cats/cats.module';
-import { ProductsModule } from './modules/products/products.module';
-import { CategoryModule } from './modules/category/category.module';
-import { BrandModule } from './modules/brand/brand.module';
-import { UserModule } from './modules/user/user.module';
 import { User } from './modules/user/entities/user.entity';
 import { Product } from './modules/products/entities/products.entity';
 import { APP_GUARD } from '@nestjs/core';
@@ -16,11 +11,14 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
+import { ModuleList } from './modules';
 
 // task: implement global route with api/
 
 @Module({
   imports: [
+    ...ModuleList,
+
     ConfigModule.forRoot({
       isGlobal: true, // makes process.env available everywhere
       load: [databaseConfig],
@@ -30,16 +28,6 @@ import { HttpModule } from '@nestjs/axios';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        // type: 'mysql',
-        // host: config.get<string>('DB_HOST'),
-        // port: config.get<number>('DB_PORT'),
-        // username: config.get<string>('DB_USERNAME'),
-        // password: config.get<string>('DB_PASSWORD'),
-        // database: config.get<string>('DB_NAME'),
-        // // entities: ['dist/**/*.entity.ts'],
-        // entities: [User, Product],
-        // migrations: ['dist/database/migrations/*.ts'],
-        // synchronize: false,
         type: 'mysql',
         host: config.get('database.host'),
         port: config.get('database.port'),
@@ -51,12 +39,6 @@ import { HttpModule } from '@nestjs/axios';
         synchronize: false, // turn off for production
       }),
     }),
-
-    CatsModule,
-    ProductsModule,
-    CategoryModule,
-    BrandModule,
-    UserModule,
 
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
