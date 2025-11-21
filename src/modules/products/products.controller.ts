@@ -7,14 +7,17 @@ import {
   Patch,
   Delete,
   UseGuards,
-  Req,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from 'src/common/guard/auth.guard';
 import { findProduct } from './dto/findProduct.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('products')
 @UseGuards(AuthGuard)
 export class ProductsController {
@@ -45,7 +48,14 @@ export class ProductsController {
   }
 
   @Post('find_product')
-  findProduct(@Body() body: findProduct) {
-    return this.productService.findProduct(body);
+  async findProduct(
+    @Body() body: findProduct,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const data = await this.productService.findProduct(body);
+    return {
+      data: data.product,
+      status: HttpStatus.OK,
+    };
   }
 }

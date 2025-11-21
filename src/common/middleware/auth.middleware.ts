@@ -8,6 +8,8 @@ export class AuthMiddleWare implements NestMiddleware {
     if (header) {
       console.log(`Request received: ${req.method} ${req.originalUrl}`);
       next();
+    } else {
+      return false;
     }
   }
 }

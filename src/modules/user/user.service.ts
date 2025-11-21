@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { plainToInstance } from 'class-transformer';
 @Injectable()
 export class UserService {
   constructor(
@@ -33,8 +34,9 @@ export class UserService {
       throw new UnauthorizedException(process.env.INVALID_USER);
     }
     const payload = { id: user.id, username: user.username };
+
     return {
-      user: user,
+      user: new CreateUserDto(user),
       token: await this.jwtService.signAsync(payload),
     };
   }
@@ -61,16 +63,18 @@ export class UserService {
 
     const savedUser = await this.userRepo.save(userData);
 
+    const user = plainToInstance(CreateUserDto, savedUser, {
+      excludeExtraneousValues: true,
+    });
+
     const token = jwt.sign(
-      { id: savedUser.id, username: savedUser.username },
+      { id: user.id, username: user.username },
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
       },
     ) as string;
 
-    return { user: savedUser, token };
+    return { user: user, token };
   }
-
-  async logout(body: any) {}
 }

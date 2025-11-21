@@ -1,6 +1,6 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AllExceptionsFilter } from './common/filter/all-exceptions.filter';
@@ -21,17 +21,17 @@ async function bootstrap() {
     }),
   });
 
-
   // secure cors
   app.enableCors({
     origin: [process.env.ALLOW_SITE],
     methods: 'GET, POST, PUT, PATCH, DELETE',
-    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization',
+    allowedHeaders:
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
     credentials: true,
     preflightContinue: false,
     optionsSuccessStatus: 204,
+    exposedHeaders: ['Authorization'],
   });
-
 
   // protect your app from some well-known web vulnerabilities by setting HTTP headers appropriately
   app.use(
@@ -49,6 +49,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe()); //check validation
   app.useGlobalFilters(new AllExceptionsFilter()); // error log
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // use to hide field in dto
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

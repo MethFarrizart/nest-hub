@@ -30,10 +30,12 @@ export class ProductService {
     return product;
   }
 
-  async findProduct(body: findProduct): Promise<Product> {
+  async findProduct(body: findProduct): Promise<{ product: findProduct }> {
     const product = await this.productRepo.findOneBy({ id: body.id });
     if (!product) throw new NotFoundException('Product not found');
-    return product;
+    return {
+      product: new findProduct(product),
+    };
   }
 
   async update(id: number, dto: UpdateProductDto): Promise<Product> {

@@ -16,9 +16,7 @@ export const AppDataSource: DataSourceOptions = {
   database: process.env.DB_NAME,
   entities: [User, Product, Brand, Category], // TS files
   migrations: ['src/database/migrations/*.ts'],
-  // migrationsTableName: 'typeorm_migrations',
-  synchronize: false,
-  // logging: true,
+  synchronize: false, // turn of for production
 };
 
 const dataSource = new DataSource(AppDataSource);
