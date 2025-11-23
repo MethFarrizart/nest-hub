@@ -12,6 +12,8 @@ import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { ModuleList } from './modules';
+import { Permission } from './modules/permission/entities/permission.entity';
+import { Role } from './modules/role/entities/role.entity';
 
 // task: implement global route with api/
 
@@ -34,7 +36,7 @@ import { ModuleList } from './modules';
         username: config.get('database.username'),
         password: config.get('database.password'),
         database: config.get('database.name'),
-        entities: [User, Product],
+        entities: [User, Product, Role, Permission],
         migrations: ['dist/database/migrations/*.ts'],
         synchronize: false, // turn off for production
       }),

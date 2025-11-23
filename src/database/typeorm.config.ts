@@ -4,6 +4,9 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { Product } from 'src/modules/products/entities/products.entity';
 import { Brand } from 'src/modules/brand/entities/brand.entity';
 import { Category } from 'src/modules/category/entities/category.entity';
+import { Role } from 'src/modules/role/entities/role.entity';
+import { Permission } from 'src/modules/permission/entities/permission.entity';
+// import { Permission } from 'src/modules/permission/entities/permission.entity';
 
 dotenv.config();
 
@@ -14,7 +17,7 @@ export const AppDataSource: DataSourceOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User, Product, Brand, Category], // TS files
+  entities: [User, Product, Brand, Category, Role, Permission], // TS files
   migrations: ['src/database/migrations/*.ts'],
   synchronize: false, // turn of for production
 };

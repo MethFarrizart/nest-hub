@@ -43,7 +43,7 @@ export class UserService {
 
   async register(
     dto: CreateUserDto,
-  ): Promise<{ user: User; token: string } | null> {
+  ): Promise<{ user: CreateUserDto; token: string } | null> {
     const { username, password, role_id } = dto;
 
     const salt = await bcrypt.genSalt(10);
@@ -63,18 +63,18 @@ export class UserService {
 
     const savedUser = await this.userRepo.save(userData);
 
-    const user = plainToInstance(CreateUserDto, savedUser, {
+    const userDto = plainToInstance(CreateUserDto, savedUser, {
       excludeExtraneousValues: true,
     });
 
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: userDto.id, username: userDto.username },
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRES_IN,
       },
     ) as string;
 
-    return { user: user, token };
+    return { user: userDto, token };
   }
 }

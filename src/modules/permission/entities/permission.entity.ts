@@ -1,26 +1,26 @@
 import { Role } from 'src/modules/role/entities/role.entity';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
+  PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-@Entity('user')
-export class User {
+
+@Entity('permission')
+export class Permission {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ unique: true })
-  username: string;
-
-  @Column()
-  password: string;
 
   @Column()
   role_id: number;
 
+  @Column()
+  permission_name: string;
+
+  @Column()
+  description: string;
+
   @ManyToOne(() => Role, (role) => role.id)
-  @JoinColumn({ name: 'role_id' })
   role: Role;
 }
