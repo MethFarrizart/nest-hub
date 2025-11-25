@@ -1,10 +1,12 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 export class CreateUserDto {
+  @Expose()
   id: number;
 
   @IsString()
   @IsNotEmpty()
+  @Expose()
   username: string;
 
   @Exclude() // hide
@@ -12,7 +14,11 @@ export class CreateUserDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @Expose()
   role_id: number;
+
+  @Expose()
+  role_name: string;
 
   constructor(partial: Partial<CreateUserDto>) {
     Object.assign(this, partial);

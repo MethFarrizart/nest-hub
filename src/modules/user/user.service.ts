@@ -7,12 +7,14 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { plainToInstance } from 'class-transformer';
+import { DataSource } from 'typeorm';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepo: Repository<User>,
     private jwtService: JwtService,
+    private dataSource: DataSource,
   ) {}
 
   async login(dto: CreateUserDto) {
@@ -33,10 +35,19 @@ export class UserService {
     if (!user_password) {
       throw new UnauthorizedException(process.env.INVALID_USER);
     }
-    const payload = { id: user.id, username: user.username };
+
+    const finalUser = await this.dataSource.query<User>(
+      `SELECT USER.*, role.role_name from USER INNER JOIN role on role.id = USER.role_id WHERE USER.id = ${user.id}`,
+    );
+
+    const payload = { id: finalUser.id, username: finalUser.username };
+
+    const userDto = plainToInstance(CreateUserDto, finalUser, {
+      excludeExtraneousValues: true,
+    });
 
     return {
-      user: new CreateUserDto(user),
+      user: userDto,
       token: await this.jwtService.signAsync(payload),
     };
   }

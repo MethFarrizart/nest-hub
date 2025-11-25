@@ -117,18 +117,16 @@ nest g resource [name]
 # Create controller
 nest g controller [name]
 
+<!-- ClassSerializerInterceptor / class-transformer for checking validation  -->
+Use Node 18 LTS if you want long-term stability (recommend)
 
+Node 20 works too if you want newer features
+
+Avoid Node 21+ for NestJS projects using ClassSerializerInterceptor. It will reject and Breaks (this.removeListener is not a function) because
+Internal HTTP changes → crash
 
 
 
 
 
 <!-- Note: migration: Create once, run once life cycle -->
-
-
-
-
-<!-- "migration:new": "pnpm typeorm migration:generate -d src/database/typeorm.config.ts", -->
-
-<!--     "migration:new": "pnpm typeorm migration:generate ./src/database/migrations/news -d ./src/database/typeorm.config.ts",
- -->

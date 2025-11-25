@@ -20,7 +20,10 @@ export class User {
   @Column()
   role_id: number;
 
-  @ManyToOne(() => Role, (role) => role.id)
+  @ManyToOne(() => Role, (role) => role.users, {
+    onDelete: 'RESTRICT',
+    nullable: false,
+  })
   @JoinColumn({ name: 'role_id' })
   role: Role;
 }

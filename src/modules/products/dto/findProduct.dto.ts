@@ -1,10 +1,13 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 export class findProduct {
+  @Expose()
   id: number;
 
+  @Expose()
   name: string;
 
+  @Expose()
   qty: number;
 
   @Exclude()

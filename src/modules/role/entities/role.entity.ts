@@ -10,12 +10,12 @@ export class Role {
   @Column()
   role_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
-  @OneToMany(() => User, (user) => user.role_id)
+  @OneToMany(() => User, (user) => user.role)
   users: User[];
 
-  @OneToMany(() => Permission, (permission) => permission.role_id)
+  @OneToMany(() => Permission, (permission) => permission.role)
   permissions: Permission[];
 }

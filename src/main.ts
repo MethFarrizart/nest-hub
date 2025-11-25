@@ -1,6 +1,6 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AllExceptionsFilter } from './common/filter/all-exceptions.filter';
@@ -50,7 +50,14 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe()); //check validation
   app.useGlobalFilters(new AllExceptionsFilter()); // error log
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // use to hide field in dto
+  app.useGlobalInterceptors(
+    // new ClassSerializerInterceptor(app.get(Reflector)),
+    {
+      intercept(context, next) {
+        return next.handle();
+      },
+    },
+  ); // use to hide field in dto
 
   await app.listen(process.env.PORT ?? 3000);
 }

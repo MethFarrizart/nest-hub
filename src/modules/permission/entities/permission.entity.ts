@@ -12,15 +12,19 @@ export class Permission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  role_id: number;
+  // @Column()
+  // role_id: number;
 
   @Column()
   permission_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
-  @ManyToOne(() => Role, (role) => role.id)
+  @ManyToOne(() => Role, (role) => role.permissions, {
+    onDelete: 'RESTRICT',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'role_id' })
   role: Role;
 }

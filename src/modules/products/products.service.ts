@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DataSource } from 'typeorm';
 import { findProduct } from './dto/findProduct.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ProductService {
@@ -33,8 +34,12 @@ export class ProductService {
   async findProduct(body: findProduct): Promise<{ product: findProduct }> {
     const product = await this.productRepo.findOneBy({ id: body.id });
     if (!product) throw new NotFoundException('Product not found');
+
+    const productDto = plainToInstance(findProduct, product, {
+      excludeExtraneousValues: true,
+    });
     return {
-      product: new findProduct(product),
+      product: productDto,
     };
   }
 

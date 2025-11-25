@@ -3,17 +3,15 @@ import { AuthMiddleWare } from './common/middleware/auth.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './modules/user/entities/user.entity';
-import { Product } from './modules/products/entities/products.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlingHandler } from './config/throttle.config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
-import { ModuleList } from './modules';
-import { Permission } from './modules/permission/entities/permission.entity';
-import { Role } from './modules/role/entities/role.entity';
+import { ModuleList } from './modules/module';
+import { entityList } from './modules/entity';
+import { RolesGuard } from './common/guard/role.guard';
 
 // task: implement global route with api/
 
@@ -36,7 +34,7 @@ import { Role } from './modules/role/entities/role.entity';
         username: config.get('database.username'),
         password: config.get('database.password'),
         database: config.get('database.name'),
-        entities: [User, Product, Role, Permission],
+        entities: [...entityList],
         migrations: ['dist/database/migrations/*.ts'],
         synchronize: false, // turn off for production
       }),
@@ -60,12 +58,18 @@ import { Role } from './modules/role/entities/role.entity';
       }),
     }),
   ],
+
   controllers: [AppController],
+
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: ThrottlingHandler,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

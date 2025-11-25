@@ -16,10 +16,12 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from 'src/common/guard/auth.guard';
 import { findProduct } from './dto/findProduct.dto';
 import { SkipThrottle } from '@nestjs/throttler';
+import { Roles } from 'src/common/decorator/role.decorator';
+import { RolesGuard } from 'src/common/guard/role.guard';
 
 @SkipThrottle()
 @Controller('products')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class ProductsController {
   constructor(private readonly productService: ProductService) {}
   @Post('store')
@@ -48,6 +50,7 @@ export class ProductsController {
   }
 
   @Post('find_product')
+  @Roles('admin')
   async findProduct(
     @Body() body: findProduct,
     @Res({ passthrough: true }) res: Response,
