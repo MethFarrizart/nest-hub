@@ -42,8 +42,8 @@ export class UserService {
 
     // console.log(finalUser[0]);
 
-    const payload = { 
-      id: finalUser[0].id, 
+    const payload = {
+      id: finalUser[0].id,
       username: finalUser[0].username,
       role_name: finalUser[0].role_name,
     };
@@ -58,7 +58,7 @@ export class UserService {
 
     return {
       user: finalUser,
-      token
+      token,
     };
   }
 

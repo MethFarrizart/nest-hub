@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 import { AllExceptionsFilter } from './common/filter/all-exceptions.filter';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -10,16 +11,26 @@ import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger({
-      transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({
-          filename: 'logs/error.log',
-          level: 'error',
-        }),
-      ],
-    }),
+    bufferLogs: true, // <--- required to override internal logs
+    logger: false, // <--- disable Nest default logger
   });
+
+  const logger = WinstonModule.createLogger({
+    transports: [
+      // DAILY ROTATE ERROR LOG
+      new DailyRotateFile({
+        dirname: 'logs', // folder
+        filename: 'error-%DATE%.log',
+        datePattern: 'YYYY-MM-DD',
+        level: 'error',
+        zippedArchive: true, // optional: compress old logs
+        maxSize: '20m', // optional
+        maxFiles: '14d', // keep 14 days
+      }),
+    ],
+  });
+
+  app.useLogger(logger);
 
   // secure cors
   app.enableCors({
