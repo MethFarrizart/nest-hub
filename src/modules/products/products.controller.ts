@@ -52,9 +52,7 @@ export class ProductsController {
   @Post('find_product')
   @Roles('admin')
   async findProduct(
-    @Body() body: findProduct,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+    @Body() body: findProduct) {
     const data = await this.productService.findProduct(body);
     return {
       data: data.product,

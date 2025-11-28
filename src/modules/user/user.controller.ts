@@ -19,8 +19,9 @@ export class UserController {
 
     res.cookie('token', auth.token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       maxAge: 60 * 60 * 1000,
+      sameSite: 'lax'
     });
 
     //  return plain object (ClassSerializerInterceptor will serialize)

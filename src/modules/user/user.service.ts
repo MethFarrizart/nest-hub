@@ -40,15 +40,25 @@ export class UserService {
       `SELECT USER.*, role.role_name from USER INNER JOIN role on role.id = USER.role_id WHERE USER.id = ${user.id}`,
     );
 
-    const payload = { id: finalUser.id, username: finalUser.username };
+    // console.log(finalUser[0]);
+
+    const payload = { 
+      id: finalUser[0].id, 
+      username: finalUser[0].username,
+      role_name: finalUser[0].role_name,
+    };
 
     const userDto = plainToInstance(CreateUserDto, finalUser, {
       excludeExtraneousValues: true,
     });
 
+    console.log(userDto);
+
+    const token = await this.jwtService.signAsync(payload);
+
     return {
-      user: userDto,
-      token: await this.jwtService.signAsync(payload),
+      user: finalUser,
+      token
     };
   }
 
